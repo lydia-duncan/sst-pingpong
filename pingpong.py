@@ -133,3 +133,41 @@ for i in range(0,args.N):
     if connectE:
       link(pingPongers[me], pingPongers[neighborE], "east")
 
+cli0 = sst.Component("cli0", "dbgcli.DbgCLI")
+cli0.addParams({"verbose" : 5,
+                "numPorts" : 1,
+                "minData" : 0,
+                "maxData" : 0,
+                "clockDelay" : "100",
+                "clocks" : 10000,
+                "rngSeed" : 1223,
+                "clockFreq" : "1GHz",
+                "traceMode" : "2", # recv
+                #"probeMode" : "1",
+                "probeStartCycle" : "30000",
+                "probeEndCycle" : "8000000",
+                "probeBufferSize" : "1024",
+                "probePostDelay" : "10",
+                "probePort" : "10000",
+                "cliControl" : "64",
+                })
+cli1 = sst.Component("cli1", "dbgcli.DbgCLI")
+cli1.addParams({"verbose" : 5,
+                "numPorts" : 1,
+                "minData" : 0,
+                "maxData" : 0,
+                "clockDelay" : "100",
+                "clocks" : 10000,
+                "rngSeed" : 1223,
+                "clockFreq" : "1GHz",
+                "traceMode" : "1", # send
+                "probeMode" : "1",
+                "probeStartCycle" : "30000",
+                "probeEndCycle" : "8000000",
+                "probeBufferSize" : "1024",
+                "probePostDelay" : "10",
+                })
+
+cliLink = sst.Link("linkToCLI")
+cliLink.connect( (cli0, "port0", "%is" % args.edgeDelay),
+                 (cli1, "port0", "%is" % args.edgeDelay) )
